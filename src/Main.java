@@ -5,7 +5,6 @@ public static void main() {
 
     Biblioteca biblioteca = new Biblioteca("Biblioteca Central");
 
-
     // EJEMPLARES
     Ejemplar ejemplar1 = new Ejemplar(1, "Disponible", "Estante A1");
     Ejemplar ejemplar2 = new Ejemplar(2, "Disponible", "Estante A2");
@@ -31,9 +30,11 @@ public static void main() {
 
     // USUARIOS
     Usuario usuario1 = new Usuario(1, "Danny", "correo@gmail.com", "3001234567");
+    Usuario usuario2 = new Usuario(3, "Caterine", "caterine@gmail.com", "3001234568");
     Bibliotecario bibliotecario1 = new Bibliotecario(2, "Emilsen", "emilsen@gmail.com", "3009876543", "EMP001");
 
     biblioteca.registrarUsuario(usuario1);
+    biblioteca.registrarUsuario(usuario2);
     biblioteca.registrarUsuario(bibliotecario1);
 
 
@@ -44,6 +45,9 @@ public static void main() {
     Prestamo prestamo2 = new Prestamo(1002, LocalDate.now(), LocalDate.now().plusDays(7), EstadoPrestamo.ABIERTO, usuario1, ejemplar2, null);
     Prestamo prestamo3 = new Prestamo(1003, LocalDate.now(), LocalDate.now().plusDays(7), EstadoPrestamo.ABIERTO, usuario1, ejemplar3, null);
     Prestamo prestamo4 = new Prestamo(1004, LocalDate.now(), LocalDate.now().plusDays(7), EstadoPrestamo.ABIERTO, usuario1, ejemplar4, null);
+    Prestamo prestamo5 = new Prestamo(1005, LocalDate.now(), LocalDate.now().plusDays(7), EstadoPrestamo.ABIERTO, usuario2, ejemplar4, new Multa(2, 7000, false));
+
+    List<Prestamo> prestamos = List.of(prestamo1, prestamo2, prestamo3, prestamo4, prestamo5);
 
     biblioteca.registrarPrestamo(prestamo1);
     biblioteca.registrarPrestamo(prestamo2);
@@ -61,12 +65,7 @@ public static void main() {
     bibliotecario1.mostrarInformacion();
 
     System.out.println("\n=== BUSQUEDA POR TITULO ===");
-    Libro libroBuscado = biblioteca.buscarPorTitulo("Don Quijote");
-    if (libroBuscado != null) {
-        libroBuscado.mostrarInformacion();
-    } else {
-        System.out.println("Libro no encontrado.");
-    }
+    BuscarPorTitulo(biblioteca);
 
     System.out.println("\n=== BUSQUEDA POR AUTOR ===");
     biblioteca.buscarPorAutor("Eduardo Cañas");
@@ -74,9 +73,38 @@ public static void main() {
     System.out.println("\n=== PRESTAMOS ===");
     biblioteca.mostrarPrestamos();
 
-    System.out.println("\n=== MULTA ===");
+    System.out.println("\n=== USUARIOS CON MULTAS ===");
+    MostrarUsuariosConMultas(prestamos);
+}
 
+private static void BuscarPorTitulo(Biblioteca biblioteca) {
+    Libro libroBuscado = biblioteca.buscarPorTitulo("Don Quijote");
+    if (libroBuscado != null) {
+        libroBuscado.mostrarInformacion();
+    } else {
+        System.out.println("Libro no encontrado.");
+    }
+}
 
+private static void MostrarUsuariosConMultas(List<Prestamo> prestamos) {
+    prestamos.forEach(prestamo -> {
+        VerificarExistenciaDeMulta(prestamo);
+    });
+}
+
+private static void VerificarExistenciaDeMulta(Prestamo prestamo) {
+    if(prestamo.getMulta() != null){
+        MostrarLaInformacionDeLaMultaDelUsuario(prestamo);
+    }
+}
+
+private static void MostrarLaInformacionDeLaMultaDelUsuario(Prestamo prestamo) {
+    System.out.println("El usuario con nombre "
+            + prestamo.getUsuario().getNombre()
+            + " y la identificación "
+            + prestamo.getUsuario().getId()
+            + " debe un monto total de: "
+            + prestamo.getMulta().getMonto());
 }
 
 private static void AsignarAtributosDelPrestamo1(Prestamo prestamo1, Usuario usuario1, Ejemplar ejemplar1) {
