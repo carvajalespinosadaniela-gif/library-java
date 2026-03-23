@@ -82,7 +82,7 @@ public static void main() {
 private static void AsignarAtributosDelPrestamo1(Prestamo prestamo1, Usuario usuario1, Ejemplar ejemplar1) {
     prestamo1.setIdPrestamo(1001);
     prestamo1.setFechaInicio(LocalDate.now());
-    prestamo1.setFechaInicio(LocalDate.now().plusDays(7));
+    prestamo1.setFechaFin(LocalDate.now().plusDays(7));
     prestamo1.setEstado(EstadoPrestamo.ABIERTO);
     prestamo1.setUsuario(usuario1);
     prestamo1.setEjemplar(ejemplar1);
